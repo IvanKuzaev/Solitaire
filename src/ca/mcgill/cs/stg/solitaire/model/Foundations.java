@@ -20,9 +20,6 @@
  *******************************************************************************/
 package ca.mcgill.cs.stg.solitaire.model;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import ca.mcgill.cs.stg.solitaire.cards.Card;
 import ca.mcgill.cs.stg.solitaire.cards.CardStack;
 import ca.mcgill.cs.stg.solitaire.cards.Rank;
@@ -31,18 +28,16 @@ import ca.mcgill.cs.stg.solitaire.cards.Rank;
  * Represents the four piles that must be completed to win the game, with the ace
  * at the bottom, face up, and all cards of the same suit on top, in sequence.
  */
-class Foundations
+class Foundations extends CardPiles<FoundationPile>
 {
-	private final Map<FoundationPile, CardStack> aPiles = new HashMap<>();
-	
 	/**
 	 * Creates an initialized FoundationPiles object that consists of four empty piles.
 	 */
 	Foundations()
 	{
-		initialize();
+		super(FoundationPile.class);
 	}
-	
+
 	/**
 	 * @return The total number of cards in all the foundation piles.
 	 */
@@ -55,29 +50,15 @@ class Foundations
 		}
 		return total;
 	}
-	
+
 	/**
 	 * Initializes the FoundationPiles object to reset it to four empty piles.
 	 */
 	void initialize()
 	{
-		for( FoundationPile index : FoundationPile.values() )
-		{
-			aPiles.put(index, new CardStack());
-		}
+		reset(FoundationPile.class);
 	}
-	
-	/**
-	 * @param pLocation The location of the pile to check.
-	 * @return True if the pile at pLocation is empty
-	 * @pre pLocation != null
-	 */
-	boolean isEmpty(FoundationPile pLocation)
-	{
-		assert pLocation != null;
-		return aPiles.get(pLocation).isEmpty();
-	}
-	
+
 	/**
 	 * @param pCard The card we wish to move
 	 * @param pLocation The desired location for pCard
@@ -96,45 +77,9 @@ class Foundations
 		}
 		else
 		{
-			return pCard.getSuit() == peek(pLocation).getSuit() && 
+			return pCard.getSuit() == peek(pLocation).getSuit() &&
 					pCard.getRank().ordinal() == peek(pLocation).getRank().ordinal()+1;
 		}
 	}
-	
-	/**
-	 * @param pLocation The location of the pile to peek at
-	 * @return The card on top of the pile at pLocation
-	 * @pre pLocation != null & !aPiles.get(pLocation).isEmpty();
-	 */
-	Card peek(FoundationPile pLocation)
-	{
-		assert pLocation != null && !aPiles.get(pLocation).isEmpty();
-		return aPiles.get(pLocation).peek();
-	}
-	
-	/**
-	 * Place pCard onto the pile at the desired location.
-	 * 
-	 * @param pCard The card to place.
-	 * @param pLocation The location where to place the card.
-	 * @pre pCard != null && pLocation != null
-	 */
-	void push(Card pCard, FoundationPile pLocation)
-	{
-		assert pCard != null && pLocation != null;
-		aPiles.get(pLocation).push(pCard);
-	}
-	
-	/**
-	 * Remove the card at the top of the pile at pLocation,
-	 * and returns it.
-	 * 
-	 * @param pLocation The location where to obtain the card.
-	 * @pre pLocation != null && !isEmpty(pLocation)
-	 */
-	Card pop(FoundationPile pLocation)
-	{
-		assert pLocation != null && !isEmpty(pLocation);
-		return aPiles.get(pLocation).pop();
-	}
+
 }

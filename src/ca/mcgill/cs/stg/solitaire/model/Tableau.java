@@ -21,10 +21,8 @@
 package ca.mcgill.cs.stg.solitaire.model;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.Stack;
@@ -36,34 +34,30 @@ import ca.mcgill.cs.stg.solitaire.cards.Rank;
 
 /**
  * Represents seven piles of cards that fan downwards, where cards
- * must be stacked in alternating suit colors, and where cards can 
+ * must be stacked in alternating suit colors, and where cards can
  * be moved from pile to pile.
  */
-class Tableau
+class Tableau extends CardPiles<TableauPile>
 {
-	private final Map<TableauPile, CardStack> aPiles = new HashMap<>();
 	private final Set<Card> aVisible = new HashSet<>();
-	
+
 	/**
 	 * Creates an empty tableau.
 	 */
 	Tableau()
 	{
-		for( TableauPile index : TableauPile.values() )
-		{
-			aPiles.put(index, new CardStack());
-		}
+		super(TableauPile.class);
 	}
-	
+
 	/**
 	 * Fills the tableau by drawing cards from the deck.
 	 * @param pDeck a deck of card to use to fill the piles initially.
 	 * @pre pDeck != null
-	 * 
+	 *
 	 */
 	void initialize(Deck pDeck)
-	{   
-		assert pDeck != null; 
+	{
+		assert pDeck != null;
 		aVisible.clear();
 		for( int i = 0; i < TableauPile.values().length; i++ )
 		{
@@ -79,11 +73,10 @@ class Tableau
 			}
 		}
 	}
-	
-	
+
 	/**
-	 * Determines if it is legal to move pCard on top of pPile, 
-	 * i.e. if a king is moved to an empty pile or any other rank on 
+	 * Determines if it is legal to move pCard on top of pPile,
+	 * i.e. if a king is moved to an empty pile or any other rank on
 	 * a card of immediately greater rank but of a different color.
 	 * @param pCard The card we wish to move
 	 * @param pPile The desired destination pile
@@ -99,12 +92,12 @@ class Tableau
 			return pCard.getRank() == Rank.KING;
 		}
 		else
-		{ 
-			return pCard.getRank().ordinal() == pile.peek().getRank().ordinal()-1 && 
+		{
+			return pCard.getRank().ordinal() == pile.peek().getRank().ordinal()-1 &&
 					!pCard.getSuit().sameColorAs(pile.peek().getSuit());
 		}
 	}
-	
+
 	/**
 	 * @param pCard The card to check.
 	 * @return True if pCard is a visible king located at the bottom
@@ -117,12 +110,11 @@ class Tableau
 		return pCard.getRank() == Rank.KING && aPiles.get(getPile(pCard)).peek(0) == pCard;
 	}
 
-	
 	/**
 	 * Returns a copy of the entire pile at the specified position in the tableau.
-	 * 
+	 *
 	 * @param pPile The pile to obtain.
-	 * @return A copy of the at pPile.
+	 * @return A copy of the CardStack at pPile.
 	 * @pre pPile != null
 	 */
 	CardStack getPile(TableauPile pPile)
@@ -130,7 +122,7 @@ class Tableau
 		assert pPile != null;
 		return new CardStack(aPiles.get(pPile));
 	}
-	
+
 	/**
 	 * Returns true if moving pCard away reveals the top of the card.
 	 * @param pCard The card to test
@@ -148,7 +140,7 @@ class Tableau
 		}
 		return aVisible.contains(pCard) && !aVisible.contains(previous.get());
 	}
-	
+
 	private TableauPile getPile(Card pCard)
 	{
 		assert contains(pCard);
@@ -162,7 +154,7 @@ class Tableau
 		assert false;
 		return null;
 	}
-	
+
 	private Optional<Card> getPreviousCard(Card pCard)
 	{
 		Optional<Card> previous = Optional.empty();
@@ -176,14 +168,13 @@ class Tableau
 		}
 		return Optional.empty();
 	}
-	
-	
- 	/**
+
+	/**
 	 * Move pCard and all the cards below to pDestination.
 	 * @param pCard The card to move, possibly including all the cards on top of it.
 	 * @param pOrigin The location of the card before the move.
 	 * @param pDestination The intended destination of the card.
-     * @pre this is a legal move
+	 * @pre this is a legal move
 	 */
 	void moveWithin(Card pCard, TableauPile pOrigin, TableauPile pDestination )
 	{
@@ -203,7 +194,7 @@ class Tableau
 			aPiles.get(pDestination).push(temp.pop());
 		}
 	}
-	
+
 	/**
 	 * Returns a sequence of cards starting at pCard and including
 	 * all cards on top of it.
@@ -231,7 +222,7 @@ class Tableau
 		}
 		return new CardStack(lReturn);
 	}
-	
+
 	/**
 	 * Make the top card of a pile visible.
 	 * @param pIndex The index of the requested pile.
@@ -242,7 +233,7 @@ class Tableau
 		assert !aPiles.get(pIndex).isEmpty();
 		aVisible.add(aPiles.get(pIndex).peek());
 	}
-	
+
 	/**
 	 * Make the top card of a pile not visible.
 	 * @param pIndex The index of the requested stack.
@@ -253,7 +244,7 @@ class Tableau
 		assert !aPiles.get(pIndex).isEmpty();
 		aVisible.remove(aPiles.get(pIndex).peek());
 	}
-	
+
 	/**
 	 * @param pCard The card to check
 	 * @param pIndex The index of the pile to check
@@ -272,7 +263,7 @@ class Tableau
 		}
 		return false;
 	}
-	
+
 	/**
 	 * @param pCard The card to check.
 	 * @return Whether pCard is contains in any stack.
@@ -290,7 +281,7 @@ class Tableau
 		}
 		return false;
 	}
-	
+
 	/**
 	 * @param pCard The card to check.
 	 * @return true if pCard is visible in the piles.
@@ -301,7 +292,7 @@ class Tableau
 		assert contains(pCard);
 		return aVisible.contains(pCard);
 	}
-	
+
 	/**
 	 * @param pCard The card to check.
 	 * @return True if the card is visible and there is no
@@ -322,18 +313,19 @@ class Tableau
 			return !previousCard.isPresent() || !isVisible(previousCard.get());
 		}
 	}
-	
+
 	/**
 	 * Removes the top card from the pile at pIndex.
 	 * @param pIndex The index of the pile to pop.
 	 * @pre !isEmpty(pIndex)
 	 */
-	void pop(TableauPile pIndex)
+	Card pop(TableauPile pIndex)
 	{
-		assert !aPiles.get(pIndex).isEmpty();
-		aVisible.remove(aPiles.get(pIndex).pop());
+		Card card = super.pop(pIndex);
+		aVisible.remove(card);
+		return card;
 	}
-	
+
 	/**
 	 * Places a card on top of the pile at pIndex. The
 	 * card will be visible by default.
@@ -343,8 +335,8 @@ class Tableau
 	 */
 	void push(Card pCard, TableauPile pIndex)
 	{
-		assert pCard != null && pIndex != null;
-		aPiles.get(pIndex).push(pCard);
+		super.push(pCard, pIndex);
 		aVisible.add(pCard);
 	}
+
 }
