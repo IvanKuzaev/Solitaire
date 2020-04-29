@@ -84,29 +84,31 @@ public class CardPileView extends StackPane implements GameModelListener
 			getChildren().add(image);
 			return;
 		}
-		
-		for( Card cardView : stack)
+
+		ImageView topCardImage = null;
+		for( Card card : stack)
 		{
-			final ImageView image = new ImageView(getImage(cardView));
+			final ImageView image = new ImageView(getImage(card));
         	image.setTranslateY(Y_OFFSET * offset);
         	offset++;
         	getChildren().add(image);
-        
-        	setOnDragOver(createDragOverHandler(image, cardView));
-    		setOnDragEntered(createDragEnteredHandler(image, cardView));
-    		setOnDragExited(createDragExitedHandler(image, cardView));
-    		setOnDragDropped(createDragDroppedHandler(image, cardView));
-    		
-        	if( GameModel.instance().isVisibleInTableau(cardView))
+
+        	if( GameModel.instance().isVisibleInTableau(card))
         	{
-        		image.setOnDragDetected(createDragDetectedHandler(image, cardView));
+        		image.setOnDragDetected(createDragDetectedHandler(image, card));
         	}
+
+			topCardImage = image;
 		}
+		setOnDragOver(createDragOverHandler(topCardImage));
+		setOnDragEntered(createDragEnteredHandler(topCardImage));
+		setOnDragExited(createDragExitedHandler(topCardImage));
+		setOnDragDropped(createDragDroppedHandler(topCardImage));
     }
 	
 	private EventHandler<MouseEvent> createDragDetectedHandler(final ImageView pImageView, final Card pCard)
 	{
-		return new EventHandler<MouseEvent>() 
+		return new EventHandler<MouseEvent>()
 		{
 			@Override
 			public void handle(MouseEvent pMouseEvent) 
@@ -120,7 +122,7 @@ public class CardPileView extends StackPane implements GameModelListener
 		};
 	}
 	
-	private EventHandler<DragEvent> createDragOverHandler(final ImageView pImageView, final Card pCard)
+	private EventHandler<DragEvent> createDragOverHandler(final ImageView pImageView)
 	{
 		return new EventHandler<DragEvent>()
 		{
@@ -140,7 +142,7 @@ public class CardPileView extends StackPane implements GameModelListener
 		};
 	}
 	
-	private EventHandler<DragEvent> createDragEnteredHandler(final ImageView pImageView, final Card pCard)
+	private EventHandler<DragEvent> createDragEnteredHandler(final ImageView pImageView)
 	{
 		return new EventHandler<DragEvent>()
 		{
@@ -157,7 +159,7 @@ public class CardPileView extends StackPane implements GameModelListener
 		};
 	}
 	
-	private EventHandler<DragEvent> createDragExitedHandler(final ImageView pImageView, final Card pCard)
+	private EventHandler<DragEvent> createDragExitedHandler(final ImageView pImageView)
 	{
 		return new EventHandler<DragEvent>()
 		{
@@ -170,7 +172,7 @@ public class CardPileView extends StackPane implements GameModelListener
 		};
 	}
 	
-	private EventHandler<DragEvent> createDragDroppedHandler(final ImageView pImageView, final Card pCard)
+	private EventHandler<DragEvent> createDragDroppedHandler(final ImageView pImageView)
 	{
 		return new EventHandler<DragEvent>() 
 		{
