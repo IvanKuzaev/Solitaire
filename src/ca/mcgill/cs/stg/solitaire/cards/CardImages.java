@@ -60,7 +60,16 @@ public final class CardImages
 	{
 		return getCard( "b" );
 	}
-	
+
+	/**
+	 * Return an image of Joker card.
+	 * @return An icon representing Joker.
+	 */
+	public static Image getJoker()
+	{
+		return getCard( "j" );
+	}
+
 	private static String getCode( Card pCard )
 	{
 		return RANK_CODES[ pCard.getRank().ordinal() ] + SUIT_CODES[ pCard.getSuit().ordinal() ];		
