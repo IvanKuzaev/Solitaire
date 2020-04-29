@@ -95,24 +95,7 @@ public final class Card
 		return aRank;
 	}
 	
-//	/**
-//	 * @param pCard The card to compare against
-//	 * @return True if and only if pCard's suit is of the same color as 
-//	 * this card.
-//	 */
-//	public boolean sameColorAs(Card pCard)
-//	{
-//		assert pCard != null;
-//		if( getSuit() == Suit.DIAMONDS || getSuit() == Suit.HEARTS )
-//		{
-//			return pCard.getSuit() == Suit.DIAMONDS || pCard.getSuit() == Suit.HEARTS;
-//		}
-//		else
-//		{
-//			return pCard.getSuit() == Suit.CLUBS || pCard.getSuit() == Suit.SPADES;
-//		}
-//	}
-	
+
 	/**
 	 * @return A string uniquely representing this card. The string
 	 * format is not specified except that it is fully compatible
